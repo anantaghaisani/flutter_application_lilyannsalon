@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+
+import 'package:flutter_application_lilyannsalon/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,6 +12,18 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  void initState() {
+    super.initState();
+      // Membuat timer dengan jangka waktu 2 detik
+      Timer(Duration(seconds: 2), () {
+        // Pindah ke tampilan selanjutnya (contoh: MyHomePage)
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (BuildContext context) => LogInScreen(),
+          ),
+        );
+      });
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
