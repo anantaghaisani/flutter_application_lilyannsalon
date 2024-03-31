@@ -3,6 +3,7 @@ import 'package:flutter_application_lilyannsalon/login.dart';
 // import 'package:flutter_application_lilyannsalon/splash_screen.dart';
 
 
+//ini tanteh
 void main() {
   runApp(const MyApp());
 }
