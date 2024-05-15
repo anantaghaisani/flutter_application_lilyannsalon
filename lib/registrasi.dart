@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_application_lilyannsalon/login.dart';
 import 'package:flutter_application_lilyannsalon/theme.dart';
-// import 'package:login_signup_ui_starter/widgets/checkbox.dart';
+import 'package:flutter_application_lilyannsalon/widget/custom_textformfield.dart';
 import 'package:flutter_application_lilyannsalon/widget/primary_button.dart';
-import 'package:flutter_application_lilyannsalon/widget/registrasi_form.dart';
+
 
 class SignUpScreen extends StatelessWidget {
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController= TextEditingController();
+  TextEditingController passwordConfirmController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,19 +20,12 @@ class SignUpScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 70,
-            ),
+            const SizedBox(height: 70),
             Padding(
               padding: kDefaultPadding,
-              child: Text(
-                'Registrasi Akun',
-                style: titleText,
-              ),
+              child: Text('Registrasi Akun', style: titleText)
             ),
-            SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 5),
             Padding(
               padding: kDefaultPadding,
               child: Row(
@@ -34,9 +34,7 @@ class SignUpScreen extends StatelessWidget {
                     'Sudah punya akun?',
                     style: subTitle,
                   ),
-                  SizedBox(
-                    width: 5,
-                  ),
+                  const SizedBox(width: 5),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -55,47 +53,44 @@ class SignUpScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
+            Padding(padding: kDefaultPadding, child: CustomTextField(textEditingController: lastNameController, textLabel: "Last Name", pass: false)),
+            Padding(padding: kDefaultPadding, child: CustomTextField(textEditingController: firstNameController, textLabel: "First Name", pass: false)),
+            Padding(padding: kDefaultPadding, child: CustomTextField(textEditingController: emailController, textLabel: "Email", pass: false)),
+            Padding(padding: kDefaultPadding, child: CustomTextField(textEditingController: phoneController, textLabel: "Phone Number", pass: false)),
+            Padding(padding: kDefaultPadding, child: CustomTextField(textEditingController: passwordController, textLabel: "Password", pass: true)),
+            Padding(padding: kDefaultPadding, child: CustomTextField(textEditingController: passwordConfirmController, textLabel: "Confirm Password", pass: true)),
+            const SizedBox(height: 20),
+            const SizedBox(height: 20),
             Padding(
               padding: kDefaultPadding,
-              child: SignUpForm(),
+              child: InkWell(
+                onTap: () {
+                  String lName = lastNameController.text;
+                  String fName = firstNameController.text;
+                  String email = emailController.text;
+                  String phone = phoneController.text;
+                  String password = passwordController.text;
+                  String passConfirm = passwordConfirmController.text;
+
+                  print(lName);
+                  print(fName);
+                  print(email);
+                  print(phone);
+                  print(password);
+                  print(passConfirm);                  
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => LogInScreen(),
+                    ),
+                  );
+                },
+                child: PrimaryButton(buttonText: 'Register'),
+              ),
             ),
-            SizedBox(
-              height: 20,
-            ),
-            // Padding(
-            //   padding: kDefaultPadding,
-            //   child: CheckBox('Agree to terms and conditions.'),
-            // ),
-            // SizedBox(
-            //   height: 20,
-            // ),
-            // Padding(
-            //   padding: kDefaultPadding,
-            //   child: CheckBox('I have at least 18 years old.'),
-            // ),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: kDefaultPadding,
-              child: PrimaryButton(buttonText: 'Register'),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            // Padding(
-            //   padding: kDefaultPadding,
-            //   child: LoginOption(),
-            // ),
-            SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
+            const SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter_application_lilyannsalon/theme.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String buttonText;
+  // final Function() fungsi;
   PrimaryButton({required this.buttonText});
   @override
   Widget build(BuildContext context) {

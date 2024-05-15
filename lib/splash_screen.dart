@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
       // Membuat timer dengan jangka waktu 2 detik
-      Timer(Duration(seconds: 2), () {
+      Timer(const Duration(seconds: 2), () {
         // Pindah ke tampilan selanjutnya (contoh: MyHomePage)
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color(0xFF944E63),
         ),
         child: Center(
