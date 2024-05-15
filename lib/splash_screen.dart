@@ -1,16 +1,28 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_application_lilyannsalon/login.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // Menunda navigasi ke halaman SideBar selama 3 detik
+  //   Timer(Duration(seconds: 3), () {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => sideBar()), // Ganti dengan halaman yang benar
+  //     );
+  //   });
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -35,8 +47,8 @@ class _SplashScreenState extends State<SplashScreen> {
             width: 300,
             height: 300,
             child: Image.asset("assets/images/logo_splash.png"),
+          ),
         ),
-      ),
       ),
     );
   }
