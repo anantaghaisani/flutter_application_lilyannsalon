@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_lilyannsalon/book.dart';
 import 'package:flutter_application_lilyannsalon/bookForm.dart';
 import 'package:flutter_application_lilyannsalon/home.dart';
 // import 'package:flutter_application_lilyannsalon/home.dart';
 import 'package:flutter_application_lilyannsalon/login.dart';
+import 'package:flutter_application_lilyannsalon/profile.dart';
 import 'package:flutter_application_lilyannsalon/splash_screen.dart';
+import 'package:flutter_application_lilyannsalon/widget/appTab.dart';
 // import 'package:flutter_application_lilyannsalon/splash_screen.dart';
 
 
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: SplashScreen()
     );
   }
 }

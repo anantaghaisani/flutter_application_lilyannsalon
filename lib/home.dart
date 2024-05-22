@@ -12,8 +12,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 final List<String> ImagePath=[
-  "assets/images/carousel1.jpg",
-  "assets/images/carousel2.jpg",
+  "assets/images/newcarousel.png",
+  "assets/images/newcarousel1.png",
   "assets/images/carousel3.jpg",
   "assets/images/carousel4.jpg",
   "assets/images/carousel5.jpg"

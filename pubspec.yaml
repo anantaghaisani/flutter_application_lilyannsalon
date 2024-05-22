@@ -120,6 +120,14 @@ flutter:
     - family: PoppinsBold
       fonts:
         - asset: fonts/Poppins-Bold.ttf
+
+    - family: InterRegular
+      fonts:
+        - asset: fonts/Inter-Regular.ttf
+
+    - family: InterSemiBold
+      fonts:
+        - asset: fonts/Inter-SemiBold.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
