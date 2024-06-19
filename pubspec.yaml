@@ -35,6 +35,7 @@ dependencies:
   curved_labeled_navigation_bar: ^2.0.2
   intl: ^0.19.0
 
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -45,6 +46,8 @@ dependencies:
   google_fonts: ^6.2.1
   json_annotation: ^4.9.0
   awesome_dialog: ^3.2.1
+  fluttertoast: ^8.2.5
+  
 
 dev_dependencies:
   flutter_test:
@@ -120,14 +123,6 @@ flutter:
     - family: PoppinsBold
       fonts:
         - asset: fonts/Poppins-Bold.ttf
-
-    - family: InterRegular
-      fonts:
-        - asset: fonts/Inter-Regular.ttf
-
-    - family: InterSemiBold
-      fonts:
-        - asset: fonts/Inter-SemiBold.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

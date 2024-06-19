@@ -1,26 +1,34 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'user.g.dart';
-@JsonSerializable()
 class UserData {
-  final int idCustomer;
+  final String id;
   final String email;
-  final String noTelp;
-  final String namaLengkap;
-  final String password;
-  final String pertanyaan;
-  final String jawaban;
-
+  final String name;
+  final String nomor_hp;
+  
   UserData({
-    required this.idCustomer,
+    required this.id,
     required this.email,
-    required this.noTelp,
-    required this.namaLengkap,
-    required this.password,
-    required this.pertanyaan,
-    required this.jawaban,
+    required this.name,
+    required this.nomor_hp,
   });
 
-  factory UserData.fromJson(Map<String, dynamic> json) => _$UserDataFromJson(json);
-  Map<String, dynamic> toJson() => _$UserDataToJson(this);
+  // Factory method untuk mengonversi data JSON menjadi objek UserData
+  factory UserData.fromJson(Map<String, dynamic> json) {
+    return UserData(
+      // id: int.parse(json['id']),  // Convert the id from string to int
+      id: json['id'] ?? "",
+      email: json['email'] ?? "",
+      name: json['name'] ?? "",
+      nomor_hp: json['nomor_hp'] ?? "",
+    );
+  }
+
+  // Metode untuk mengonversi objek UserData menjadi format JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'name': name,
+      'nomor_hp': nomor_hp,
+    };
+  }
 }

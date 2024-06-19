@@ -20,7 +20,7 @@ class sideBar extends StatefulWidget {
 
 class _sideBarState extends State<sideBar> {
   int pageIndex = 0;
-  List<Widget> homePages =  [HomeScreen(), BookScreen(), ProfileScreen()];
+  List<Widget> profile = const [ProfileScreen()];
 
   String ID = "";
   String EMAIL = "";
@@ -96,11 +96,6 @@ class _sideBarState extends State<sideBar> {
                 setState(() {
                   pageIndex = 0;
                   
-          
-          
-          
-          
-                  
                 });             
                 Navigator.pop(context); 
                 },
@@ -141,12 +136,7 @@ class _sideBarState extends State<sideBar> {
               onTap: () {
                 setState(() {
                   pageIndex = 2;
-                CurvedNavigationBar(items: [
-                  CurvedNavigationBarItem(
-            child: Icon(Icons.home_outlined, color: Colors.white),
-            label: 'Home',
-          ),
-                ],);
+                
                 });
                 Navigator.pop(context);
               },
@@ -206,7 +196,7 @@ class _sideBarState extends State<sideBar> {
       ),
       body: IndexedStack(
         index: pageIndex,
-        children: homePages,
+        children: profile,
       ),
     );
   }

@@ -1,118 +1,110 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
+import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_application_lilyannsalon/detailtreat.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key); // Perbaikan syntax dari key
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-final List<String> ImagePath=[
-  "assets/images/newcarousel.png",
-  "assets/images/newcarousel1.png",
-  "assets/images/carousel3.jpg",
-  "assets/images/carousel4.jpg",
-  "assets/images/carousel5.jpg"
-];
 
-late List<Widget> _pages;
-int _activePage = 0;
-final PageController _pageController =PageController(initialPage: 0);
-Timer? _timer;
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<List<dynamic>> _fetchData;
 
-class _HomeScreenState extends State<HomeScreen> 
-  with SingleTickerProviderStateMixin{
-  // late TabController _tabController;
-  void startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 3), (timer) { 
-      if (_pageController.page == ImagePath.length - 1) {
-        _pageController.animateToPage(0, duration: Duration(milliseconds: 300), curve: Curves.linear);
-  }else {
-    _pageController.nextPage( duration: Duration(milliseconds: 300),curve: Curves.linear);
-  }});
-   
-  }
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    _pages = List.generate(ImagePath.length, (index) => 
-    imageBanner(ImagePath: ImagePath[index],));
-    // startTimer();
-    // _tabController = TabController(length: 3, vsync: this);
+    _fetchData = fetchData();
   }
-  
+
+  Future<List<dynamic>> fetchData() async {
+    final response = await http
+        .get(Uri.parse('https://2f90-203-29-27-130.ngrok-free.app/api/menu'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height /4,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: ImagePath.length,
-                    onPageChanged: (value){
-                      setState(() {
-                        _activePage = value;
-                      });
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 200.0,
+                aspectRatio: 16 / 9,
+                viewportFraction: 0.8,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 3),
+                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: true,
+                scrollDirection: Axis.horizontal,
+              ),
+              items: [
+                'assets/images/carousel1.jpg',
+                'assets/images/carousel2.jpg',
+                'assets/images/carousel3.jpg',
+                'assets/images/carousel4.jpg',
+                'assets/images/carousel5.jpg',
+              ].map((String imagePath) {
+                return Builder(
+                    builder: (BuildContext context) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.asset(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          width: double.infinity, // ensures the image fills the width
+                        ),
+                      );
                     },
-                    itemBuilder: (context, index) {
-                      return _pages[index];
-                    },
-                  ),
-                ),
-                Positioned(
-                  bottom: 15,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    color: Colors.transparent,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children:
-                        List <Widget>.generate(_pages.length, (index) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          child: InkWell(
-                            onTap: (){
-                              _pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.linear);
-                            },
-                            child: CircleAvatar(
-                              radius: 5,
-                              backgroundColor: _activePage == index? Color(0xFFB9798C):Colors.grey,
-                            ),
-                          ),
-                        ))
-                      ),
-                  ),
-                )
-              ],
+                  );
+              }).toList(),
             ),
-            SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  'Pilihan Treatment',
-                  style: TextStyle(
-                    fontSize: 22,                    fontWeight: FontWeight.bold,
-                    fontFamily: 'MontserratBold',
-                  ),
-                ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 10),
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Pilihan Treatment',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    // fontStyle: FontStyle.italic,
+                    fontSize: 25),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 18, 12, 20),
-              child: GridB(onTap: () {  },),
-            )
+            SizedBox(
+              height: 10,
+            ),
+            FutureBuilder<List<dynamic>>(
+              future: _fetchData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return GridB(data: snapshot.data!);
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -121,161 +113,97 @@ class _HomeScreenState extends State<HomeScreen>
 }
 
 class GridB extends StatefulWidget {
-  final void Function()? onTap;
+  final List<dynamic> data;
 
-  const GridB({Key? key, required this.onTap }) : 
-  super(key: key);
+  const GridB({Key? key, required this.data}) : super(key: key);
 
   @override
   State<GridB> createState() => _GridBState();
 }
 
 class _GridBState extends State<GridB> {
-  final List<Map<String, dynamic>> gridMap = [
-    {
-      "title": "Potong",
-      "price": "\Rp 200.000",
-      "images":
-          "https://asset.kompas.com/crops/YjO4-jE4mD7v-79EUP1KngvTJxw=/0x1:500x334/750x500/data/photo/2020/05/18/5ec2666b44aea.jpg",
-    },
-    {
-      "title": "Potong",
-      "price": "\Rp 200.000",
-      "images":
-          "https://asset.kompas.com/crops/YjO4-jE4mD7v-79EUP1KngvTJxw=/0x1:500x334/750x500/data/photo/2020/05/18/5ec2666b44aea.jpg",
-    },
-    {
-      "title": "Potong",
-      "price": "\Rp 200.000",
-      "images":
-          "https://asset.kompas.com/crops/YjO4-jE4mD7v-79EUP1KngvTJxw=/0x1:500x334/750x500/data/photo/2020/05/18/5ec2666b44aea.jpg",
-    },
-    {
-      "title": "Potong",
-      "price": "\Rp 200.000",
-      "images":
-          "https://asset.kompas.com/crops/YjO4-jE4mD7v-79EUP1KngvTJxw=/0x1:500x334/750x500/data/photo/2020/05/18/5ec2666b44aea.jpg",
-    },
-    {
-      "title": "Potong",
-      "price": "\Rp 200.000",
-      "images":
-          "https://asset.kompas.com/crops/YjO4-jE4mD7v-79EUP1KngvTJxw=/0x1:500x334/750x500/data/photo/2020/05/18/5ec2666b44aea.jpg",
-    },
-    {
-      "title": "Potong",
-      "price": "\Rp 200.000",
-      "images":
-          "https://asset.kompas.com/crops/YjO4-jE4mD7v-79EUP1KngvTJxw=/0x1:500x334/750x500/data/photo/2020/05/18/5ec2666b44aea.jpg",
-    },
-    {
-      "title": "Potong",
-      "price": "\Rp 200.000",
-      "images":
-          "https://asset.kompas.com/crops/YjO4-jE4mD7v-79EUP1KngvTJxw=/0x1:500x334/750x500/data/photo/2020/05/18/5ec2666b44aea.jpg",
-    },
-    {
-      "title": "Potong",
-      "price": "\Rp 200.000",
-      "images":
-          "https://asset.kompas.com/crops/YjO4-jE4mD7v-79EUP1KngvTJxw=/0x1:500x334/750x500/data/photo/2020/05/18/5ec2666b44aea.jpg",
-    }
-  ];
-
-void navigateDetailTreat(int index) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => TreatmentScreen()));
-  }
-
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12.0,
-        mainAxisSpacing: 12.0,
-        mainAxisExtent: 240,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0), // Padding di sisi kiri dan kanan
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12.0,
+          mainAxisSpacing: 12.0,
+          mainAxisExtent: 240,
+        ),
+        itemCount: widget.data.length,
+        itemBuilder: (_, index) {
+          return GestureDetector(
+            onTap: () => navigateDetailTreat(context, widget.data[index]),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.0),
+                color: const Color(0xFFECDFDF),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16.0),
+                      topRight: Radius.circular(16.0),
+                    ),
+                    child: Image.network(
+                      "https://2f90-203-29-27-130.ngrok-free.app/websem4/lilyansalon/public/${widget.data[index]['image']}",
+                      height: 130,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 8, 15, 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${widget.data[index]['nama_treatment']}",
+                          style: const TextStyle(
+                            fontFamily: 'PoppinsRegular',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 2.0,
+                        ),
+                        Text(
+                          "${widget.data[index]['harga']}",
+                          style: const TextStyle(
+                            fontFamily: 'PoppinsSemiBold',
+                            fontSize: 20,
+                            color: Color(0xFF944E63),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 6.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
-      itemCount: gridMap.length,
-      itemBuilder: (_, index) {
-        return GestureDetector(
-          onTap: () => navigateDetailTreat(index),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.0),
-              color: Color(0xFFECDFDF),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16.0),
-                    topRight: Radius.circular(16.0),
-                  ),
-                  child: Image.network(
-                    "${gridMap.elementAt(index)['images']}",
-                    height: 160,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 8, 15, 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${gridMap.elementAt(index)['title']}",
-                        style: Theme.of(context).textTheme.subtitle1!.merge(
-                              const TextStyle(
-                                fontFamily: 'PoppinsRegular',
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                      ),
-                      const SizedBox(
-                        height: 2.0,
-                      ),
-                      Text(
-                        "${gridMap.elementAt(index)['price']}",
-                        style: Theme.of(context).textTheme.subtitle2!.merge(
-                              TextStyle(
-                                fontFamily: 'PoppinsSemiBold',
-                                fontSize: 20,
-                                color: Color(0xFF944E63),
-                              ),
-                            ),
-                      ),
-                      const SizedBox(
-                        height: 6.0,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );  
+    );
   }
-}
 
-
-
-class imageBanner extends StatelessWidget {
-  final String? ImagePath;
-
-  const imageBanner({super.key, this.ImagePath} );
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      ImagePath!,
-      fit: BoxFit.cover,
+  void navigateDetailTreat(BuildContext context, dynamic treatmentData) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TreatmentScreen(treatmentData: treatmentData),
+      ),
     );
   }
 }
